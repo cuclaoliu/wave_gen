@@ -1,0 +1,183 @@
+// audio_if.v
+
+// This file was auto-generated as a prototype implementation of a module
+// created in component editor.  It ties off all outputs to ground and
+// ignores all inputs.  It needs to be edited to make it do something
+// useful.
+// 
+// This file will not be automatically regenerated.  You should check it in
+// to your version control system if you want to keep it.
+
+`timescale 1 ps / 1 ps
+module audio_if (
+		input  wire [2:0]  avalon_slave_address,   // avalon_slave.address
+		input  wire        avalon_slave_read,      //             .read
+		output wire [15:0] avalon_slave_readdata,  //             .readdata
+		input  wire        avalon_slave_write,     //             .write
+		input  wire [15:0] avalon_slave_writedata, //             .writedata
+		input  wire        clk,         		   //   clock_sink.clk
+		input  wire        reset,                  //   reset_sink.reset
+		input  wire        BCLK,                   //  conduit_end.adcdat
+		input  wire        ADCLRC,                 //  conduit_end.adcdat
+		output wire        XCK,                    //  conduit_end.adcdat
+		input  wire        ADCDAT,                 //  conduit_end.adcdat
+		input wire         DACLRC,                 //  conduit_end.adcdat
+		output wire        DACDAT                  //             .dacdat
+	);
+
+/*****************************************************************************
+ *                           Constant Declarations                           *
+ *****************************************************************************/
+`define DAC_LFIFO_ADDR	0
+`define DAC_RFIFO_ADDR	1
+`define ADC_LFIFO_ADDR	2
+`define ADC_RFIFO_ADDR	3
+`define CMD_ADDR		4
+`define STATUS_ADDR		5
+
+
+/*****************************************************************************
+ *                 Internal wires and registers Declarations                 *
+ *****************************************************************************/
+// host
+reg	[15:0]				reg_readdata;
+reg							fifo_clear;
+
+// dac
+wire							dacfifo_full;
+reg 							dacfifo_write;
+reg 	[31:0]				dacfifo_writedata;
+
+// adc
+wire							adcfifo_empty;
+reg 							adcfifo_read;
+wire	[31:0]				adcfifo_readdata;
+reg	[31:0]				data32_from_adcfifo;
+reg	[31:0]				data32_from_adcfifo_2;
+
+
+/*****************************************************************************
+ *                             Sequential logic                              *
+ *****************************************************************************/
+////////// fifo clear
+always @ (posedge clk)
+begin
+	if (reset)
+		fifo_clear <= 1'b0;
+	else if (avalon_slave_write && (avalon_slave_address == `CMD_ADDR))
+		fifo_clear <= avalon_slave_writedata[0];
+	else if (fifo_clear)
+		fifo_clear <= 1'b0;
+end
+
+
+
+////////// write audio data(left&right) to dac-fifo
+always @ (posedge clk)
+begin
+	if (reset || fifo_clear)
+	begin
+		dacfifo_write <= 1'b0;
+	end
+
+	else if (avalon_slave_write && (avalon_slave_address == `DAC_LFIFO_ADDR))
+	begin
+		dacfifo_writedata[31:16] <= avalon_slave_writedata;
+		dacfifo_write <= 1'b0;
+	end
+	else if (avalon_slave_write && (avalon_slave_address == `DAC_RFIFO_ADDR))
+	begin
+		dacfifo_writedata[15:0] <= avalon_slave_writedata;
+		dacfifo_write <= 1'b1;
+	end
+	else
+		dacfifo_write <= 1'b0;
+end
+
+
+////////// response data to avalon-mm
+always @ (negedge clk)
+begin
+	if (reset || fifo_clear)
+		data32_from_adcfifo = 0;
+	else if (avalon_slave_read && (avalon_slave_address == `STATUS_ADDR))
+		reg_readdata <= {adcfifo_empty, dacfifo_full};
+	else if (avalon_slave_read && (avalon_slave_address == `ADC_LFIFO_ADDR))
+		reg_readdata <= data32_from_adcfifo[31:16];
+	else if (avalon_slave_read && (avalon_slave_address == `ADC_RFIFO_ADDR))
+	begin
+		reg_readdata <= data32_from_adcfifo[15:0];
+		data32_from_adcfifo <= data32_from_adcfifo_2;
+	end
+end
+
+////////// read audio data from adc fifo
+always @ (negedge clk)
+begin
+	if (reset)
+	begin
+		adcfifo_read <= 1'b0;
+		data32_from_adcfifo_2 <= 0;
+	end
+	else if ((avalon_slave_address == `ADC_LFIFO_ADDR) & avalon_slave_read & ~adcfifo_empty)
+	begin
+		adcfifo_read <= 1'b1;
+	end
+	else if (adcfifo_read)
+	begin
+		data32_from_adcfifo_2 = adcfifo_readdata;
+		adcfifo_read <= 1'b0;
+	end
+end
+
+
+
+
+/*****************************************************************************
+ *                            Combinational logic                            *
+ *****************************************************************************/
+assign	avalon_slave_readdata = reg_readdata;
+assign  XCK = clk;
+
+
+/*****************************************************************************
+ *                              Internal Modules                             *
+ *****************************************************************************/
+
+audio_dac dac_inst(
+	// host
+	.clk(clk),
+	.reset(reset),
+	.write(dacfifo_write),
+	.writedata(dacfifo_writedata),
+	.full(dacfifo_full),
+	.clear(fifo_clear),
+	// dac
+	.bclk(BCLK),
+	.daclrc(DACLRC),
+	.dacdat(DACDAT)
+);
+
+
+audio_adc adc_inst(
+	// host
+	.clk(clk),
+	.reset(reset),
+	.read(adcfifo_read),
+	.readdata(adcfifo_readdata),
+	.empty(adcfifo_empty),
+	.clear(fifo_clear),
+	// dac
+	.bclk(BCLK),
+	.adclrc(ADCLRC),
+	.adcdat(ADCDAT)
+);
+
+
+defparam
+	dac_inst.DATA_WIDTH = 32;
+
+defparam
+	adc_inst.DATA_WIDTH = 32;
+
+endmodule

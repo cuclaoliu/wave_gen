@@ -1,0 +1,120 @@
+/*
+ * "Hello World" example.
+ *
+ * This example prints 'Hello from Nios II' to the STDOUT stream. It runs on
+ * the Nios II 'standard', 'full_featured', 'fast', and 'low_cost' example
+ * designs. It runs with or without the MicroC/OS-II RTOS and requires a STDOUT
+ * device in your system's hardware.
+ * The memory footprint of this hosted application is ~69 kbytes by default
+ * using the standard reference design.
+ *
+ * For a reduced footprint version of this template, and an explanation of how
+ * to reduce the memory footprint for a given application, see the
+ * "small_hello_world" template.
+ *
+ */
+
+#include "my_includes.h"
+#include "debug.h"
+#include "i2c.h"
+#include "audio.h"
+#include <math.h>
+
+typedef enum{
+    MIC_RECORD,
+    LINEIN_RECORD,
+    LINEOUT_PLAY
+}AUDIO_FUNC;
+
+#define LINEOUT_DEFUALT_VOL 0x5d
+#define PI 3.14159265
+#define SINE_WAVE_LENGTH	1024
+#define SCALE		16384
+
+bool audio_setup(AUDIO_FUNC audio_func, int sample_rate){
+    bool bSuccess = TRUE;
+    AUDIO_InterfaceActive(FALSE);
+    //
+    if (audio_func == MIC_RECORD){
+        AUDIO_SetInputSource(SOURCE_MIC);
+        AUDIO_DacEnableSoftMute(TRUE);
+        AUDIO_AdcEnableHighPassFilter(FALSE);
+        AUDIO_MicBoost(FALSE);
+        AUDIO_MicMute(FALSE);
+        AUDIO_LineInMute(TRUE);
+    }else if (audio_func == LINEIN_RECORD){
+        AUDIO_SetInputSource(SOURCE_LINEIN);
+        AUDIO_DacEnableSoftMute(TRUE);
+        AUDIO_AdcEnableHighPassFilter(FALSE);
+        AUDIO_MicMute(TRUE);
+        AUDIO_LineInMute(FALSE);
+        AUDIO_SetLineInVol(0x17, 0x17);  // max 0x1F, min:0; 0x17: 0dB (assume max input is 2.0v rms)
+    }else if (audio_func == LINEOUT_PLAY){
+        AUDIO_DacEnableSoftMute(TRUE);
+        AUDIO_MicBoost(FALSE);
+        AUDIO_MicMute(TRUE);
+        AUDIO_LineInMute(FALSE);
+        AUDIO_DacEnableSoftMute(FALSE);
+        //AUDIO_DacDeemphasisControl(DEEMPHASIS_48K);
+        AUDIO_DacEnableZeroCross(TRUE);
+        AUDIO_SetLineOutVol(LINEOUT_DEFUALT_VOL, LINEOUT_DEFUALT_VOL); // max 7F, min: 30, 0x79: 0 db
+        AUDIO_DacEnableSoftMute(FALSE);
+    }
+
+    if (sample_rate == 8000)
+        AUDIO_SetSampleRate(RATE_ADC8K_DAC8K);
+    else if (sample_rate == 32000)
+        AUDIO_SetSampleRate(RATE_ADC32K_DAC32K);
+    else if (sample_rate == 48000)
+        AUDIO_SetSampleRate(RATE_ADC48K_DAC48K);
+    else if (sample_rate == 44100)
+        AUDIO_SetSampleRate(RATE_ADC44K1_DAC44K1);
+    else
+        AUDIO_SetSampleRate(RATE_ADC96K_DAC96K);
+    //
+    AUDIO_InterfaceActive(TRUE);
+
+    return bSuccess;
+}
+
+int main()
+{
+    int i = 0, step = 2;
+    double x, y, MIN_RADIAN;
+    short data = 0;
+    short *pBuf;
+
+    if (!AUDIO_Init()){
+        printf("Audio Init Error\r\n");
+    }
+    //AUDIO_REG_READ();
+    AUDIO_FifoClear();
+    int sample_rate = 96000;
+    audio_setup(LINEOUT_PLAY, sample_rate);
+    printf("playing (sample rate = %d)...\r\n", sample_rate);
+
+    MIN_RADIAN = 2 * PI / SINE_WAVE_LENGTH;
+    pBuf = (short *)DATA_BUFFER_BASE;
+    for (i = 0; i < SINE_WAVE_LENGTH; i++){
+ 	   x = MIN_RADIAN * i;
+ 	   y = sin(x) * SCALE;
+ 	   *(pBuf+i) = y;
+    }
+    //step = 2;
+    i = 0;
+    // infinite loop
+    while(1){
+       // continue playing
+       if (AUDIO_DacFifoNotFull()){
+    	   data = *(pBuf+i);
+    	   //IOWR_ALTERA_AVALON_PIO_DATA(LEDR_BASE, data);
+    	   //printf("i:%d, data: %d\r\n", i, data);
+           AUDIO_DacFifoSetData(data, data);
+    	   i += step;
+    	   if (i >= SINE_WAVE_LENGTH)
+    		   i -= SINE_WAVE_LENGTH;
+        }
+    }
+
+  return 0;
+}

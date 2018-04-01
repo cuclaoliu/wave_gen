@@ -1,0 +1,62 @@
+18:03:18 **** Incremental Build of configuration Nios II for project wave_gen_bsp ****
+make all 
+[BSP build complete]
+18:03:21 **** Incremental Build of configuration Nios II for project wave_gen ****
+make all 
+Info: Building ../wave_gen_bsp/
+C:/intelFPGA/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../wave_gen_bsp/
+[BSP build complete]
+Info: Compiling audio.c to obj/default/audio.o
+nios2-elf-gcc -xc -MP -MMD -c -I../wave_gen_bsp//HAL/inc -I../wave_gen_bsp/ -I../wave_gen_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/audio.o audio.c
+Info: Compiling debug.c to obj/default/debug.o
+nios2-elf-gcc -xc -MP -MMD -c -I../wave_gen_bsp//HAL/inc -I../wave_gen_bsp/ -I../wave_gen_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/debug.o debug.c
+debug.c: In function 'myprintf_hex_array':
+debug.c:72:17: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+         sprintf(szText, "[%02X]", *(pHex+i));
+                 ^
+In file included from c:\intelfpga\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:29:0,
+                 from debug.c:32:
+c:\intelfpga\nios2eds\bin\gnu\h-x86_64-mingw32\nios2-elf\include\stdio.h:258:5: note: expected 'char * restrict' but argument is of type 'unsigned char *'
+ int _EXFUN(sprintf, (char *__restrict, const char *__restrict, ...)
+     ^
+In file included from my_includes.h:53:0,
+                 from debug.c:34:
+debug.c:73:16: warning: pointer targets in passing argument 1 of 'myprintf' differ in signedness [-Wpointer-sign]
+         DEBUG((szText));
+                ^
+debug.h:47:42: note: in definition of macro 'DEBUG'
+ #define DEBUG(x)               {myprintf x;}  // standard in/out, specifed in project (it could be uart, jtag, or lcd)
+                                          ^
+debug.c:53:5: note: expected 'char *' but argument is of type 'unsigned char *'
+ int myprintf(char *format, ...){
+     ^
+Info: Compiling i2c.c to obj/default/i2c.o
+nios2-elf-gcc -xc -MP -MMD -c -I../wave_gen_bsp//HAL/inc -I../wave_gen_bsp/ -I../wave_gen_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/i2c.o i2c.c
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../wave_gen_bsp//HAL/inc -I../wave_gen_bsp/ -I../wave_gen_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+Info: Linking wave_gen.elf
+nios2-elf-g++  -T'../wave_gen_bsp//linker.x' -msys-crt0='../wave_gen_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../wave_gen_bsp/   -Wl,-Map=wave_gen.map   -O0 -g -Wall   -mhw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o wave_gen.elf obj/default/audio.o obj/default/debug.o obj/default/i2c.o obj/default/main.o -lm -msys-lib=m
+nios2-elf-insert wave_gen.elf --thread_model hal --cpu_name nios2_gen2 --qsys true --simulation_enabled false --id 1702376594 --sidp 0x1082058 --timestamp 1522575782 --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios_core --quartus_project_dir "D:/soc/wave_gen" --jdi ../..//output_files/wave_gen.jdi --sopcinfo D:/soc/wave_gen/software/wave_gen_bsp/../../nios_core.sopcinfo
+Info: (wave_gen.elf) 98 KBytes program size (code + initialized data).
+Info:                150 KBytes free for stack + heap.
+Info: Creating wave_gen.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source wave_gen.elf >wave_gen.objdump
+[wave_gen build complete]
+18:04:34 **** Incremental Build of configuration Nios II for project wave_gen_bsp ****
+make all 
+[BSP build complete]
+18:04:37 **** Incremental Build of configuration Nios II for project wave_gen ****
+make all 
+Info: Building ../wave_gen_bsp/
+C:/intelFPGA/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../wave_gen_bsp/
+[BSP build complete]
+[wave_gen build complete]
+18:05:56 **** Incremental Build of configuration Nios II for project wave_gen_bsp ****
+make all 
+[BSP build complete]
+18:06:03 **** Incremental Build of configuration Nios II for project wave_gen ****
+make all 
+Info: Building ../wave_gen_bsp/
+C:/intelFPGA/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../wave_gen_bsp/
+[BSP build complete]
+[wave_gen build complete]

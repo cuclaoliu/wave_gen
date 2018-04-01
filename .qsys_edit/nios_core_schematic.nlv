@@ -1,0 +1,47 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst nios_core.mm_clock_crossing_bridge -pg 1 -lvl 4 -y 350
+preplace inst nios_core.ledg -pg 1 -lvl 5 -y 910
+preplace inst nios_core.altpll_sys -pg 1 -lvl 2 -y 530
+preplace inst nios_core.sysid_qsys -pg 1 -lvl 5 -y 190
+preplace inst nios_core.key -pg 1 -lvl 5 -y 1210
+preplace inst nios_core.i2c_sda -pg 1 -lvl 5 -y 810
+preplace inst nios_core.i2c_scl -pg 1 -lvl 5 -y 710
+preplace inst nios_core.jtag_uart -pg 1 -lvl 5 -y 270
+preplace inst nios_core -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst nios_core.onchip_memory2 -pg 1 -lvl 5 -y 110
+preplace inst nios_core.altpll_audio -pg 1 -lvl 4 -y 550
+preplace inst nios_core.timer -pg 1 -lvl 5 -y 370
+preplace inst nios_core.clk_50 -pg 1 -lvl 1 -y 650
+preplace inst nios_core.nios2_gen2.reset_bridge -pg 1
+preplace inst nios_core.data_buffer -pg 1 -lvl 5 -y 30
+preplace inst nios_core.sw -pg 1 -lvl 5 -y 1110
+preplace inst nios_core.nios2_gen2.clock_bridge -pg 1
+preplace inst nios_core.nios2_gen2 -pg 1 -lvl 3 -y 480
+preplace inst nios_core.ledr -pg 1 -lvl 5 -y 1010
+preplace inst nios_core.audio -pg 1 -lvl 5 -y 490
+preplace inst nios_core.nios2_gen2.cpu -pg 1
+preplace netloc EXPORT<net_container>nios_core</net_container>(MASTER)nios_core.altpll_vga_clk,(MASTER)altpll_sys.c1) 1 2 4 NJ 320 NJ 320 NJ 480 NJ
+preplace netloc FAN_OUT<net_container>nios_core</net_container>(MASTER)mm_clock_crossing_bridge.m0,(SLAVE)i2c_scl.s1,(SLAVE)sw.s1,(SLAVE)i2c_sda.s1,(SLAVE)ledr.s1,(SLAVE)key.s1,(SLAVE)ledg.s1) 1 4 1 1450
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)nios_core.altpll_sys_locked,(SLAVE)altpll_sys.locked_conduit) 1 0 2 NJ 720 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)nios_core.clk,(SLAVE)clk_50.clk_in) 1 0 1 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)altpll_sys.areset_conduit,(SLAVE)nios_core.altpll_sys_areset) 1 0 2 NJ 540 NJ
+preplace netloc POINT_TO_POINT<net_container>nios_core</net_container>(MASTER)altpll_audio.c0,(SLAVE)audio.clock) 1 4 1 1590
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)ledg.external_connection,(SLAVE)nios_core.ledg) 1 0 5 NJ 940 NJ 940 NJ 940 NJ 940 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)altpll_audio.locked_conduit,(SLAVE)nios_core.altpll_audio_locked) 1 0 4 NJ 420 NJ 420 NJ 420 NJ
+preplace netloc FAN_OUT<net_container>nios_core</net_container>(SLAVE)data_buffer.clk1,(SLAVE)jtag_uart.clk,(SLAVE)nios2_gen2.clk,(SLAVE)sysid_qsys.clk,(SLAVE)onchip_memory2.clk1,(SLAVE)mm_clock_crossing_bridge.s0_clk,(SLAVE)timer.clk,(MASTER)altpll_sys.c0) 1 2 3 700 380 1180 340 1490
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)altpll_audio.areset_conduit,(SLAVE)nios_core.altpll_audio_areset) 1 0 4 NJ 360 NJ 360 NJ 360 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)sw.external_connection,(SLAVE)nios_core.sw) 1 0 5 NJ 1140 NJ 1140 NJ 1140 NJ 1140 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)nios_core.reset,(SLAVE)clk_50.clk_in_reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)nios_core.audio,(SLAVE)audio.conduit_end) 1 0 5 NJ 300 NJ 300 NJ 300 NJ 300 NJ
+preplace netloc FAN_OUT<net_container>nios_core</net_container>(SLAVE)jtag_uart.irq,(SLAVE)timer.irq,(MASTER)nios2_gen2.irq) 1 3 2 NJ 680 1570
+preplace netloc FAN_OUT<net_container>nios_core</net_container>(SLAVE)altpll_sys.inclk_interface,(MASTER)clk_50.clk,(SLAVE)altpll_audio.inclk_interface) 1 1 3 340 440 NJ 440 1100
+preplace netloc FAN_OUT<net_container>nios_core</net_container>(SLAVE)ledg.clk,(MASTER)altpll_sys.c2,(SLAVE)sw.clk,(SLAVE)i2c_sda.clk,(SLAVE)mm_clock_crossing_bridge.m0_clk,(SLAVE)ledr.clk,(SLAVE)key.clk,(SLAVE)i2c_scl.clk) 1 2 3 NJ 620 1140 720 1490
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)i2c_scl.external_connection,(SLAVE)nios_core.i2c_scl) 1 0 5 NJ 740 NJ 740 NJ 740 NJ 740 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)key.external_connection,(SLAVE)nios_core.key) 1 0 5 NJ 1240 NJ 1240 NJ 1240 NJ 1240 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)nios_core.ledr,(SLAVE)ledr.external_connection) 1 0 5 NJ 1040 NJ 1040 NJ 1040 NJ 1040 NJ
+preplace netloc EXPORT<net_container>nios_core</net_container>(SLAVE)i2c_sda.external_connection,(SLAVE)nios_core.i2c_sda) 1 0 5 NJ 840 NJ 840 NJ 840 NJ 840 NJ
+preplace netloc INTERCONNECT<net_container>nios_core</net_container>(SLAVE)data_buffer.reset1,(SLAVE)mm_clock_crossing_bridge.m0_reset,(SLAVE)key.reset,(SLAVE)sysid_qsys.reset,(SLAVE)sw.reset,(SLAVE)audio.reset,(MASTER)nios2_gen2.debug_reset_request,(SLAVE)altpll_sys.inclk_interface_reset,(SLAVE)jtag_uart.reset,(SLAVE)mm_clock_crossing_bridge.s0_reset,(MASTER)clk_50.clk_reset,(SLAVE)timer.reset,(SLAVE)altpll_audio.inclk_interface_reset,(SLAVE)ledr.reset,(SLAVE)ledg.reset,(SLAVE)i2c_sda.reset,(SLAVE)onchip_memory2.reset1,(SLAVE)nios2_gen2.reset,(SLAVE)i2c_scl.reset) 1 1 4 360 520 640 640 1200 700 1550
+preplace netloc INTERCONNECT<net_container>nios_core</net_container>(SLAVE)altpll_sys.pll_slave,(SLAVE)timer.s1,(MASTER)nios2_gen2.data_master,(SLAVE)onchip_memory2.s1,(SLAVE)mm_clock_crossing_bridge.s0,(SLAVE)nios2_gen2.debug_mem_slave,(MASTER)nios2_gen2.instruction_master,(SLAVE)data_buffer.s1,(SLAVE)jtag_uart.avalon_jtag_slave,(SLAVE)altpll_audio.pll_slave,(SLAVE)audio.avalon_slave,(SLAVE)sysid_qsys.control_slave) 1 1 4 400 500 680 400 1080 480 1510
+levelinfo -pg 1 0 130 1900
+levelinfo -hier nios_core 140 170 430 820 1260 1630 1780

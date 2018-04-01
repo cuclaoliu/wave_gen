@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preferences>
+ <debug showDebugMenu="0" />
+ <systemtable filter="All Interfaces" showClockDomains="1" showResetDomains="0">
+  <columns>
+   <connections preferredWidth="239" />
+   <irq preferredWidth="34" />
+   <name preferredWidth="188" />
+   <inputclock preferredWidth="115" />
+  </columns>
+ </systemtable>
+ <library expandedCategories="Project/MyIP/audio,Project/MyIP,Library,Project" />
+ <window width="1456" height="876" x="-8" y="-8" />
+ <hdlexample language="VERILOG" />
+ <generation block_symbol_file="0" />
+</preferences>
